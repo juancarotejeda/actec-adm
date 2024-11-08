@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Moto-paradas</title> 
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+ <link rel="stylesheet" href='/static/css/estilo.css'>
+</head>  
+<body>
+  <fieldset class="login-entrada">
+  <form  action="/new_data" method='POST'>    
+  <legend><h1>GRUPO ACTEC MOTOBEN</h1></legend> 
+  <ol>
+  <li>  
+  {% with messages = get_flashed_messages()%}
+  {% if messages%}
+  {% for message in messages%}
+     <div class="msg">{{message}}</div>
+  {%endfor%}
+  {%endif%}
+  {%endwith%} 
+  </li>
+  <li> 
+  <label for="funcion">Funcion</label>          
+  <select name="funcion" id="funcion">
+        <optgroup label="Paradas"> 
+        <option selected ></option>   
+        {%for miembros in parada_adm%}
+        <option >{{miembros}}</option>
+        {%endfor%}
+        </optgroup>
+  </select>      
+  </li> 
+  <li>     
+    <label for="codigo">Codigo personal</label>
+    <input type="text" name="codigo" id="codigo" placeholder="Cedula" required>       
+  </li>
+  <li> 
+    <label for="clave">Contraseña</label>
+    <input type="password" id="clave" name="clave" placeholder="Contraseña" required>    
+  </li>
+  </ol>
+  <button type="submit"  class="button">ENTRAR</button>
+  </form>
+  </fieldset> 
+</body>
+</html>
