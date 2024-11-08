@@ -107,7 +107,9 @@ def crear_nueva_p():
        banco=request.form['banco']
        num_cuenta=request.form['cuenta']
        funciones.generar_pp(cur,parada,direccion,municipio,provincia,zona,cuota,pago,banco,num_cuenta)
-       return render_template('digitadores.html')
+       selector_paradas=funciones.listado_paradas(cur) 
+       cur.close() 
+       return render_template('digitadores.html',selector_paradas=selector_paradas)
 
 
 
@@ -148,8 +150,9 @@ def n_miembro():
        telefono=request.form['telefono']
        funcion=request.form['funcion']
        funciones.insertar_Asociado(cur,parada,nombre,cedula,telefono,funcion)
-       cur.close()
-       return render_template('digitadores.html')
+       selector_paradas=funciones.listado_paradas(cur) 
+       cur.close() 
+       return render_template('digitadores.html',selector_paradas=selector_paradas)
 
 @app.route('/select_p',methods=['GUEST','POST']) 
 def select_p(): 
@@ -181,8 +184,9 @@ def redit_miembro():
        telefono=request.form['telefono']
        funcion=request.form['funcion']
        funciones.actualizar_asoc(cur,parada,nombre,cedula,telefono,funcion,identificador)
-       cur.close()
-       return render_template('digitadores.html')
+       selector_paradas=funciones.listado_paradas(cur) 
+       cur.close() 
+       return render_template('digitadores.html',selector_paradas=selector_paradas)
 
 
 if __name__ == "__main__":
