@@ -66,7 +66,8 @@ def selector_data():
         miembros=funciones.lista_miembros(cur,parada)
         diario=funciones.diario_general(cur,parada)
         selector_paradas=funciones.listado_paradas(cur) 
-        cuotas_hist=funciones.prestamo_aport(cur,parada)    
+        cuotas_hist=funciones.prestamo_aport(cur,parada)  
+        print(cuotas_hist)  
         return render_template('direccion.html',fecha=fecha,informacion=informacion,cabecera=cabecera,miembros=miembros,valor=diario,cuotas_hist=cuotas_hist,selector_paradas=selector_paradas)
     
 
