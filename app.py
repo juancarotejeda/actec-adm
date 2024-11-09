@@ -41,13 +41,13 @@ def new_data():
     resultado=funciones.administracion(cur,codigo)
     if resultado != []:    
         if password == resultado:                                           
-           if funcion[0:3] =='GER': 
+           if funcion[0:3] =='GER' and password[0:3] == 'ge-': 
               valor=0,0,0,0,0,0,0,0
               selector_paradas=funciones.listado_paradas(cur)            
               return render_template('direccion.html',selector_paradas=selector_paradas,valor=valor) 
-           elif funcion[0:3] =='PUB':  
+           elif funcion[0:3] =='PUB' and password[0:3] == 'pb-':  
               return render_template('digitadores.html')
-           elif funcion[0:3] =='DIG': 
+           elif funcion[0:3] =='DIG' and password[0:3] == 'dg-': 
               selector_paradas=funciones.listado_paradas(cur)              
               return render_template('digitadores.html',selector_paradas=selector_paradas)   
     else: 
@@ -66,8 +66,9 @@ def selector_data():
         miembros=funciones.lista_miembros(cur,parada)
         diario=funciones.diario_general(cur,parada)
         selector_paradas=funciones.listado_paradas(cur) 
-        #cuotas_hist=funciones.prestamo_aport(cur,parada)  
-        return render_template('direccion.html',fecha=fecha,informacion=informacion,cabecera=cabecera,miembros=miembros,valor=diario,selector_paradas=selector_paradas)
+        cuotas_hist=funciones.prestamo_aport(cur,parada) 
+        print(cuotas_hist) 
+        return render_template('direccion.html',fecha=fecha,informacion=informacion,miembros=miembros,valor=diario,selector_paradas=selector_paradas,cabecera=cabecera,cuotas_hist=cuotas_hist)
     
 
 @app.route("/data_cuotas", methods=["GET","POST"])
@@ -96,6 +97,7 @@ def data_cuotas():
 def crear_nueva_p():
     if request.method == 'POST':
        cur = connection.cursor()
+       codigo=request.form['codigo']
        parada=request.form['nombre']
        direccion=request.form['direccion']
        municipio=request.form['municipio']

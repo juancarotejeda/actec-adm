@@ -29,29 +29,27 @@ def info_parada(cur,parada):
     infos=cur.fetchall()     
     return infos
 
-def info_cabecera(cur,parada):
-    cur.execute(f"SELECT cuota, pago FROM tabla_index WHERE nombre = '{parada}'")
-    resp=cur.fetchall()
-    for repueta in resp:
-      cuota=repueta[0]  
-      pago=repueta[1]
-          
+def info_cabecera(cur,parada):          
     cur.execute(f'SELECT nombre FROM {parada}')
     seleccion=cur.fetchall()
-    cant=len(seleccion)
-       
+    cant=len(seleccion)  
     presidente = []       
     cur.execute(f"SELECT nombre FROM {parada}  WHERE funcion = 'Presidente'")   
     press=cur.fetchone()
-    for pres in press:   
-        presidente=pres 
-
+    if press != None:  
+     for pres in press:   
+        presidente=pres
+    else:     
+       presidente='No disponible'   
     veedor = []
     cur.execute(f"SELECT nombre FROM {parada}  WHERE funcion = 'Veedor'")   
     presd=cur.fetchone()
-    for prex in presd:
-       veedor=prex    
-    return cuota,pago,cant,presidente,veedor               
+    if presd != None:
+     for prex in presd:
+       veedor=prex 
+    else:
+        veedor='No disponible'           
+    return cant,presidente,veedor               
      
 def lista_miembros(cur,parada):
     listas=[]
@@ -125,26 +123,31 @@ def crear_p(cur,parada,string,valor_cuota,hoy):
        return
    
 def prestamo_aport(cur,parada):
-    vgral=[]
-    cur.execute(f"SELECT nombre FROM {parada}")
-    list_nomb=cur.fetchall()
-    for nombre in list_nomb:
-        cur.execute(f"SELECT COUNT(estado) FROM {parada}_cuota WHERE estado = 'pago' and nombre='{nombre[0]}'") 
-        var_x = cur.fetchall()
-        for var_p in var_x:
+    cur.execute(f"SHOW TABLES LIKE '{parada}_cuota'")
+    vericar=cur.fetchall()
+    if vericar !=[]:
+      vgral=[]
+      cur.execute(f"SELECT nombre FROM {parada}")
+      list_nomb=cur.fetchall()
+      for nombre in list_nomb:
+         cur.execute(f"SELECT COUNT(estado) FROM {parada}_cuota WHERE estado = 'pago' and nombre='{nombre[0]}'") 
+         var_x = cur.fetchall()
+         for var_p in var_x:
               var1=var_p[0]
-        cur.execute(f"SELECT COUNT(estado) FROM {parada}_cuota WHERE estado = 'no_pago' and nombre='{nombre[0]}'")
-        var_z = cur.fetchall()
-        for var_n in var_z:
+         cur.execute(f"SELECT COUNT(estado) FROM {parada}_cuota WHERE estado = 'no_pago' and nombre='{nombre[0]}'")
+         var_z = cur.fetchall()
+         for var_n in var_z:
               var2=var_n[0]   
-        sub_t=var1+var2
-        if sub_t != 0 :    
+         sub_t=var1+var2
+         if sub_t != 0 :    
           avg=round((var1/sub_t)*100,2)
-        else:
+         else:
           avg = 0.00               
-        vgral+=(nombre[0],var1,var2,sub_t,avg) 
-    list_1=dividir_lista(vgral,5)                    
-    return list_1
+         vgral+=(nombre[0],var1,var2,sub_t,avg) 
+      list_1=dividir_lista(vgral,5)                    
+      return list_1
+    else:
+      return [] 
 
 def verif_dig(cur,nombre,password):
     cur.execute(f"SELECT username FROM digitadores WHERE password='{password}'")
@@ -231,9 +234,9 @@ def actualizar_pp(cur,parada,direccion,municipio,provincia,zona,cuota,pago,banco
      cur.execute(f"UPDATE tabla_index SET direccion='{direccion}',municipio='{municipio}',provincia='{provincia}',zona='{zona}',cuota='{cuota}',pago='{pago}',banco='{banco}', num_cuenta='{num_cuenta}' WHERE nombre='{parada}'")
      return 
  
-def generar_pp(cur,nombre,direccion,municipio,provincia,zona,cuota,pago,banco,num_cuenta): 
-    cur.execute(f"CREATE TABLE IF NOT EXISTS {nombre} (id int NOT NULL AUTO_INCREMENT , nombre VARCHAR(150)  NULL, cedula VARCHAR(50)  NULL, telefono VARCHAR(50)  NULL, funcion VARCHAR(50)  NULL, PRIMARY KEY (id))")
-    cur.execute(f"INSERT INTO tabla_index(nombre,direccion,municipio,provincia,zona,cuota,pago,banco,num_cuenta) VALUES('{nombre}','{direccion}','{municipio}','{provincia}','{zona}','{cuota}','{pago}','{banco}','{num_cuenta}') ")
+def generar_pp(cur,codigo,nombre,direccion,municipio,provincia,zona,cuota,pago,banco,num_cuenta): 
+    cur.execute(f"CREATE TABLE IF NOT EXISTS {nombre} (id int NOT NULL AUTO_INCREMENT ,codigo VARCHAR(50)  NULL, nombre VARCHAR(150)  NULL, cedula VARCHAR(50)  NULL, telefono VARCHAR(50)  NULL, funcion VARCHAR(50)  NULL, PRIMARY KEY (id))")
+    cur.execute(f"INSERT INTO tabla_index(codigo,nombre,direccion,municipio,provincia,zona,cuota,pago,banco,num_cuenta) VALUES('{codigo}','{nombre}','{direccion}','{municipio}','{provincia}','{zona}','{cuota}','{pago}','{banco}','{num_cuenta}') ")
     return
 
 
