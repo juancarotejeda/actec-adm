@@ -191,4 +191,4 @@ def redit_miembro():
 
 
 if __name__ == "__main__":
-    app.run(debug=True,port=5600,host='0.0.0.0')
+    app.run(debug=True,port=12000,host='0.0.0.0')
